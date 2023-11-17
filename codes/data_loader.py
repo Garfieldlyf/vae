@@ -1,4 +1,4 @@
-from base import BaseDataGenerator #嘻嘻
+from base import BaseDataGenerator 
 import numpy as np
 import matplotlib.pylab as plt
 from matplotlib.pyplot import savefig
@@ -64,7 +64,7 @@ class DataGenerator(BaseDataGenerator):
         cur_seq = np.zeros((self.config['l_seq'], self.config['l_win']))
         for j in range(self.config['l_seq']):
           # print(k,i,j)
-          cur_seq[j] = data['training'][k + self.config['l_win'] * (j + i): k + self.config['l_win'] * (j + i + 1)]
+          cur_seq[j] = readings_normalised[k + self.config['l_win'] * (j + i): k + self.config['l_win'] * (j + i + 1)]
         cur_lstm_seq[i] = cur_seq
       if k == 0:
         lstm_seq = cur_lstm_seq
