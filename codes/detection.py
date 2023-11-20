@@ -11,6 +11,7 @@ import tensorflow_probability as tfp
 import numpy as np
 import matplotlib.pylab as plt
 from matplotlib.pyplot import plot, ion, show, savefig, cla, figure
+%matplotlib inline
 import random
 import time
 import os
