@@ -31,7 +31,7 @@ def main():
         model_vae = VAEmodel(config)
         # create a trainer for VAE model
         trainer_vae = vaeTrainer(sess, model_vae, data, config)
-        '''
+        
         model_vae.load(sess)
         # here you train your model
         if config['TRAIN_VAE']:
@@ -70,7 +70,7 @@ def main():
             # visualise the first 10 test sequences
             for i in range(10):
                 lstm_model.plot_lstm_embedding_prediction(i, config, model_vae, sess, data, lstm_embedding)
-            '''
+            
 
 
 if __name__ == '__main__':
