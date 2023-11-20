@@ -158,7 +158,7 @@ for i in range(n_val_lstm):
         data.val_set_lstm['data'][i])
 
 from scipy.stats import norm
-def plot_histogram(test_anomaly_metric, n_bins, title, mean=None, std=None, xlim=None, saveplot=False):
+def plot_histogram(test_anomaly_metric, n_bins, title, mean=None, std=None, xlim=None, saveplot=False, filename='reconstruction_error_histogram.pdf'):
     test_anomaly_list = np.squeeze(np.ndarray.flatten(test_anomaly_metric))
     his = plt.hist(test_anomaly_list, bins=n_bins, density=True)
     if mean is None and std is None:
@@ -181,7 +181,7 @@ def plot_histogram(test_anomaly_metric, n_bins, title, mean=None, std=None, xlim
     else:
         plt.legend(('normal data distribution','test data distribution (contain anomalies)'))
     if saveplot:
-        savefig(config['result_dir']+'reconstruction_error_histogram.pdf')
+        savefig(config['result_dir'] + filename)
     else:
         plt.show()
     threshold_25 = np.percentile(test_anomaly_list, 25)
@@ -201,13 +201,13 @@ def plot_histogram(test_anomaly_metric, n_bins, title, mean=None, std=None, xlim
 # Histogram of VAE ELBO loss - validation set
 vae_elbo_m, vae_elbo_std = plot_histogram(val_vae_elbo_loss, 100,
                                           'VAE ELBO error distribution on the val set',
-                                          mean=None, std=None, xlim=None)
+                                          mean=None, std=None, xlim=None, saveplot=True, filename='vae_elbo_val_histogram.pdf')
 
 # Histogram of LSTM reconstruction error - validation set
 #  --> to decide the anomaly detection threshold
 lstm_recons_m, lstm_recons_std = plot_histogram(val_lstm_recons_error, 100,
                                               'LSTM reconstruction error distribution on the val set',
-                                              mean=None, std=None, xlim=None)
+                                              mean=None, std=None, xlim=None, saveplot=True, filename='lstm_recons_val_histogram.pdf.pdf')
 
 # Evaluate the anomaly metrics on the test windows and sequences
 n_test_lstm = t_seq.shape[0]
