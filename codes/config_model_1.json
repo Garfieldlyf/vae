@@ -13,7 +13,7 @@
     "batch_size_lstm": 32,
     "load_model": 1,
     "load_dir": "default",
-    "num_epochs_vae": 0,
+    "num_epochs_vae": 20,
     "num_epochs_lstm": 20,
     "learning_rate_vae": 0.0004,
     "learning_rate_lstm": 0.0002,
