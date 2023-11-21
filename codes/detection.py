@@ -9,6 +9,7 @@ with warnings.catch_warnings():
 import tensorflow as tf
 import tensorflow_probability as tfp
 import numpy as np
+import pandas as pd
 import matplotlib.pylab as plt
 from matplotlib.pyplot import plot, ion, show, savefig, cla, figure
 import random
@@ -141,7 +142,7 @@ def evaluate_lstm_anomaly_metric_for_a_seq(test_seq):
                       model_vae.code_input: lstm_embedding}
     recons_win_lstm = np.squeeze(sess.run(model_vae.decoded, feed_dict=feed_dict_lstm))
     lstm_recons_error = np.sum(np.square(recons_win_lstm - np.squeeze(test_seq[1:])))
-    return lstm_recons_error, lstm_embedding_error
+    return lstm_recons_error, lstm_embedding_error, recons_win_lstm
 
 
 n_val_vae = data.val_set_vae['data'].shape[0]
@@ -209,16 +210,21 @@ vae_elbo_m, vae_elbo_std = plot_histogram(val_vae_elbo_loss, 100,
 #  --> to decide the anomaly detection threshold
 lstm_recons_m, lstm_recons_std = plot_histogram(val_lstm_recons_error, 100,
                                               'LSTM reconstruction error distribution on the val set',
-                                              mean=None, std=None, xlim=None, saveplot=True, filename='lstm_recons_val_histogram.pdf.pdf')
+                                              mean=None, std=None, xlim=None, saveplot=True, filename='lstm_recons_val_histogram.pdf')
 
 # Evaluate the anomaly metrics on the test windows and sequences
 n_test_lstm = t_seq.shape[0]
 
 test_lstm_recons_error, test_lstm_embedding_error = np.zeros(n_test_lstm), np.zeros(n_test_lstm)
+recons = np.zeros((config['l_seq'] - 1, config['l_win']))
 for i in range(n_test_lstm):
-    test_lstm_recons_error[i], test_lstm_embedding_error[i] = evaluate_lstm_anomaly_metric_for_a_seq(t_seq[i])
+    test_lstm_recons_error[i], test_lstm_embedding_error[i], recons[i] = evaluate_lstm_anomaly_metric_for_a_seq(t_seq[i])
 print("All windows' reconstruction error is computed.")
 print("The total number of windows is {}".format(len(test_lstm_recons_error)))
+
+df = pd.DataFrame(recons)
+df.to_excel("recons.xlsx")
+
 
 # Histogram of LSTM reconstruction error - test set
 #  --> to detect anomaly now
