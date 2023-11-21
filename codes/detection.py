@@ -142,6 +142,24 @@ def evaluate_lstm_anomaly_metric_for_a_seq(test_seq):
                       model_vae.code_input: lstm_embedding}
     recons_win_lstm = np.squeeze(sess.run(model_vae.decoded, feed_dict=feed_dict_lstm))
     lstm_recons_error = np.sum(np.square(recons_win_lstm - np.squeeze(test_seq[1:])))
+    return lstm_recons_error, lstm_embedding_error
+
+def evaluate_lstm_anomaly_metric_for_a_seq_2(test_seq):
+    feed_dict = {model_vae.original_signal: test_seq,
+                 model_vae.is_code_input: False,
+                 model_vae.code_input: np.zeros((1, config['code_size']))}
+    vae_embedding = np.squeeze(sess.run(model_vae.code_mean, feed_dict=feed_dict))
+    # print(vae_embedding.shape)
+    lstm_embedding = np.squeeze(
+        lstm_nn_model.predict(np.expand_dims(vae_embedding[:config['l_seq'] - 1], 0), batch_size=1))
+    lstm_embedding_error = np.sum(np.square(vae_embedding[1:] - lstm_embedding))
+
+    # LSTM prediction error
+    feed_dict_lstm = {model_vae.original_signal: np.zeros((config['l_seq'] - 1, config['l_win'], 1)),
+                      model_vae.is_code_input: True,
+                      model_vae.code_input: lstm_embedding}
+    recons_win_lstm = np.squeeze(sess.run(model_vae.decoded, feed_dict=feed_dict_lstm))
+    lstm_recons_error = np.sum(np.square(recons_win_lstm - np.squeeze(test_seq[1:])))
     return lstm_recons_error, lstm_embedding_error, recons_win_lstm
 
 
@@ -218,12 +236,12 @@ n_test_lstm = t_seq.shape[0]
 test_lstm_recons_error, test_lstm_embedding_error = np.zeros(n_test_lstm), np.zeros(n_test_lstm)
 recons = np.zeros((config['l_seq'] - 1, config['l_win']))
 for i in range(n_test_lstm):
-    test_lstm_recons_error[i], test_lstm_embedding_error[i], recons[i] = evaluate_lstm_anomaly_metric_for_a_seq(t_seq[i])
+    test_lstm_recons_error[i], test_lstm_embedding_error[i], recons[i] = evaluate_lstm_anomaly_metric_for_a_seq_2(t_seq[i])
 print("All windows' reconstruction error is computed.")
 print("The total number of windows is {}".format(len(test_lstm_recons_error)))
-
+file_path_save = config['result_dir'] + "recons.xlsx"
 df = pd.DataFrame(recons)
-df.to_excel("recons.xlsx")
+df.to_excel(file_path_save, index=False)
 
 
 # Histogram of LSTM reconstruction error - test set
