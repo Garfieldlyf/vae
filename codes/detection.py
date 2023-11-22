@@ -160,7 +160,11 @@ def evaluate_lstm_anomaly_metric_for_a_seq_2(test_seq):
                       model_vae.code_input: lstm_embedding}
     recons_win_lstm = np.squeeze(sess.run(model_vae.decoded, feed_dict=feed_dict_lstm))
     lstm_recons_error = np.sum(np.square(recons_win_lstm - np.squeeze(test_seq[1:])))
-    return lstm_recons_error, lstm_embedding_error, recons_win_lstm
+    print("-----------------------------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
+    print("-----------------------------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
+    print("-----------------------------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
+    print(recons_win_lstm)
+    return lstm_recons_error, lstm_embedding_error        #, recons_win_lstm
 
 
 n_val_vae = data.val_set_vae['data'].shape[0]
