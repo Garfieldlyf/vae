@@ -86,7 +86,7 @@ def slice_rolling_windows_and_sequences(config, time_seq):
         sample_m = np.mean(rolling_windows, axis=1)
         sample_std = np.std(rolling_windows, axis=1)
 
-        n_lstm_seq = n_sample - config['l_seq'] * config['l_win'] + 1
+        n_lstm_seq = n_sample - config['l_seq'] * config['l_win'] + 1       # 8257
         lstm_seq = np.zeros((n_lstm_seq, config['l_seq'], config['l_win']))
     for i in range(n_lstm_seq):
         cur_seq = time_seq[i:i + config['l_seq'] * config['l_win']]
