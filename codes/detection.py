@@ -164,7 +164,7 @@ def evaluate_lstm_anomaly_metric_for_a_seq_2(test_seq):
     print("--------------------1---------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
     print("--------------------1---------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
     print(recons_win_lstm)
-    return lstm_recons_error, lstm_embedding_error        #, recons_win_lstm
+    return lstm_recons_error, lstm_embedding_error, recons_win_lstm        #, recons_win_lstm
 
 
 n_val_vae = data.val_set_vae['data'].shape[0]
