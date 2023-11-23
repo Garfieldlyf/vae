@@ -243,9 +243,11 @@ for i in range(n_test_lstm):
     test_lstm_recons_error[i], test_lstm_embedding_error[i], recons[i] = evaluate_lstm_anomaly_metric_for_a_seq_2(t_seq[i])
 print("All windows' reconstruction error is computed.")
 print("The total number of windows is {}".format(len(test_lstm_recons_error)))
-file_path_save = config['result_dir'] + "recons.xlsx"
-df = pd.DataFrame(recons)
-df.to_excel(file_path_save, index=False)
+
+for i in range(n_test_lstm):
+    df = pd.DataFrame(recons[i, :, :])
+    file_path_save = config['result_dir'] + f'output_{i+1}.xlsx'
+    df.to_excel(file_path_save, index=False)
 
 
 # Histogram of LSTM reconstruction error - test set
