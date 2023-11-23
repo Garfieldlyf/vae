@@ -160,9 +160,9 @@ def evaluate_lstm_anomaly_metric_for_a_seq_2(test_seq):
                       model_vae.code_input: lstm_embedding}
     recons_win_lstm = np.squeeze(sess.run(model_vae.decoded, feed_dict=feed_dict_lstm))
     lstm_recons_error = np.sum(np.square(recons_win_lstm - np.squeeze(test_seq[1:])))
-    print("-----------------------------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
-    print("-----------------------------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
-    print("-----------------------------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
+    print("--------------------1---------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
+    print("--------------------1---------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
+    print("--------------------1---------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
     print(recons_win_lstm)
     return lstm_recons_error, lstm_embedding_error        #, recons_win_lstm
 
@@ -238,7 +238,7 @@ lstm_recons_m, lstm_recons_std = plot_histogram(val_lstm_recons_error, 100,
 n_test_lstm = t_seq.shape[0]
 
 test_lstm_recons_error, test_lstm_embedding_error = np.zeros(n_test_lstm), np.zeros(n_test_lstm)
-recons = np.zeros(config['l_win'])
+recons = np.zeros(n_test_lstm, config['l_seq']-1, config['l_win'])
 for i in range(n_test_lstm):
     test_lstm_recons_error[i], test_lstm_embedding_error[i], recons[i] = evaluate_lstm_anomaly_metric_for_a_seq_2(t_seq[i])
 print("All windows' reconstruction error is computed.")
