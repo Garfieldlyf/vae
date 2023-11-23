@@ -43,7 +43,7 @@ model_vae = VAEmodel(config)
 # create a CNN model
 trainer_vae = vaeTrainer(sess, model_vae, data, config)
 model_vae.load(sess)
-#trainer_vae.train()
+trainer_vae.train()
 
 # load LSTM model
 lstm_model = lstmKerasModel(data)
@@ -60,7 +60,7 @@ cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                  verbose=1)
 # load weights if possible
 lstm_model.load_model(lstm_nn_model, config, checkpoint_path)
-#lstm_model.train(config, lstm_nn_model, cp_callback)
+lstm_model.train(config, lstm_nn_model, cp_callback)
 
 # load normalised time series
 save_dir = '../datasets/NAB-known-anomaly/'
@@ -160,9 +160,6 @@ def evaluate_lstm_anomaly_metric_for_a_seq_2(test_seq):
                       model_vae.code_input: lstm_embedding}
     recons_win_lstm = np.squeeze(sess.run(model_vae.decoded, feed_dict=feed_dict_lstm))
     lstm_recons_error = np.sum(np.square(recons_win_lstm - np.squeeze(test_seq[1:])))
-    print("--------------------1---------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
-    print("--------------------1---------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
-    print("--------------------1---------!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------")
     print(recons_win_lstm)
     return lstm_recons_error, lstm_embedding_error, recons_win_lstm        #, recons_win_lstm
 
