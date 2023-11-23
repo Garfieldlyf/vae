@@ -246,8 +246,8 @@ print("The total number of windows is {}".format(len(test_lstm_recons_error)))
 
 for i in range(n_test_lstm):
     df = pd.DataFrame(recons[i, :, :])
-    file_path_save = config['result_dir'] + f'output_{i+1}.xlsx'
-    df.to_excel(file_path_save, index=False)
+    file_path_save = config['result_dir'] + f'output_{i+1}.csv'
+    df.to_csv(file_path_save, index=False)
 
 
 # Histogram of LSTM reconstruction error - test set
