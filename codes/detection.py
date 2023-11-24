@@ -67,6 +67,7 @@ save_dir = '../datasets/NAB-known-anomaly/'
 dataset = config['dataset']
 filename = '{}.npz'.format(dataset)
 result = dict(np.load(save_dir + filename, allow_pickle=True))
+
 '''
 这里感觉没有必要留着
 if dataset == 'machine_temp':
@@ -95,8 +96,8 @@ def slice_rolling_windows_and_sequences(config, time_seq):
 
     return rolling_windows, lstm_seq, sample_m, sample_std
 
-
-t_windows, t_seq, t_sample_m, t_sample_std = slice_rolling_windows_and_sequences(config, result['readings'])
+reading_normalised = (result['readings'] - result['train_m']) / result['train_std']
+t_windows, t_seq, t_sample_m, t_sample_std = slice_rolling_windows_and_sequences(config, reading_normalised)
 t_windows = np.expand_dims(t_windows, -1)
 t_seq = np.expand_dims(t_seq, -1)
 print(t_windows.shape)
@@ -159,6 +160,8 @@ def evaluate_lstm_anomaly_metric_for_a_seq_2(test_seq):
                       model_vae.is_code_input: True,
                       model_vae.code_input: lstm_embedding}
     recons_win_lstm = np.squeeze(sess.run(model_vae.decoded, feed_dict=feed_dict_lstm))
+
+    recons_win_lstm = recons_win_lstm * result['train_std'] + result['train_m']
     lstm_recons_error = np.sum(np.square(recons_win_lstm - np.squeeze(test_seq[1:])))
     print(recons_win_lstm)
     return lstm_recons_error, lstm_embedding_error, recons_win_lstm        #, recons_win_lstm
